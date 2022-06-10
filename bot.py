@@ -23,7 +23,7 @@ def main():
     chaos_parser.set_defaults(task='chaos')
     chaos_parser.add_argument('--skills-file', default='skills.json', type=str)
     chaos_parser.add_argument('--skill-set', default='base', type=str)
-    chaos_parser.add_argument('--dungeon-time', default=60, type=int)
+    chaos_parser.add_argument('--dungeon-time', default=65, type=int)
     args = parser.parse_args()
     if args.task is None:
         parser.print_help()

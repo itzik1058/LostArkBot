@@ -35,7 +35,7 @@
     },
     "glaivier": {
         "q": {
-            "duration": 0.5,
+            "duration": 0.3,
             "cooldown": 12
         },
         "w": {
@@ -65,6 +65,44 @@
         "f": {
             "duration": 1.5,
             "cooldown": 24
+        }
+    },
+    "berserker": {
+        "q": {
+            "duration": 0.3,
+            "cooldown": 14
+        },
+        "w": {
+            "duration": 0.3,
+            "cooldown": 12
+        },
+        "e": {
+            "duration": 0.5,
+            "cooldown": 24
+        },
+        "r": {
+            "duration": 1.5,
+            "cooldown": 36
+        },
+        "a": {
+            "duration": 2,
+            "cooldown": 18
+        },
+        "s": {
+            "duration": 2.5,
+            "cooldown": 24
+        },
+        "d": {
+            "duration": 4,
+            "cooldown": 24
+        },
+        "f": {
+            "duration": 0.7,
+            "cooldown": 30
+        },
+        "z": {
+            "duration": 1,
+            "cooldown": 36
         }
     }
 }

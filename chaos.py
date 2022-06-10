@@ -52,6 +52,7 @@ def chaos(common_actions, skills, dungeon_time, timeout):
                     time.sleep(skill['duration'] + util.rand(0.1))
                     pyautogui.keyUp(key)
             leave_dungeon(common_actions)
+            common_actions.repair()
         except TimeoutError:
             print('Chaos failed')
             recalibrate(common_actions)
