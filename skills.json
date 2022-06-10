@@ -1,0 +1,70 @@
+{
+    "base": {
+        "q": {
+            "duration": 0,
+            "cooldown": 0
+        },
+        "w": {
+            "duration": 0,
+            "cooldown": 0
+        },
+        "e": {
+            "duration": 0,
+            "cooldown": 0
+        },
+        "r": {
+            "duration": 0,
+            "cooldown": 0
+        },
+        "a": {
+            "duration": 0,
+            "cooldown": 0
+        },
+        "s": {
+            "duration": 0,
+            "cooldown": 0
+        },
+        "d": {
+            "duration": 0,
+            "cooldown": 0
+        },
+        "f": {
+            "duration": 0,
+            "cooldown": 0
+        }
+    },
+    "glaivier": {
+        "q": {
+            "duration": 0.5,
+            "cooldown": 12
+        },
+        "w": {
+            "duration": 1.5,
+            "cooldown": 12
+        },
+        "e": {
+            "duration": 0.5,
+            "cooldown": 14
+        },
+        "r": {
+            "duration": 0.5,
+            "cooldown": 24
+        },
+        "a": {
+            "duration": 3,
+            "cooldown": 20
+        },
+        "s": {
+            "duration": 0.5,
+            "cooldown": 10
+        },
+        "d": {
+            "duration": 0.5,
+            "cooldown": 18
+        },
+        "f": {
+            "duration": 1.5,
+            "cooldown": 24
+        }
+    }
+}
