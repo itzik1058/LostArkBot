@@ -2,10 +2,11 @@ import util
 import time
 import datetime
 import random
+import numpy as np
 import pyautogui
 
 
-def chaos(common_actions, skills, dungeon_time, timeout):
+def chaos(common_actions, skills, ultimate_mode, dungeon_time, timeout):
     start = time.time()
     recalibrate(common_actions)
     while not datetime.time(9, 40) <= datetime.datetime.utcnow().time() <= datetime.time(10, 0): # Stop at daily reset
@@ -20,7 +21,8 @@ def chaos(common_actions, skills, dungeon_time, timeout):
                 time.sleep(0.1 + util.rand(1))
             x, y = common_actions.match('chaos_dungeon', 0.7, 3)
             time.sleep(util.rand(1))
-            util.moveTo(x + 460 + random.randint(5, 15), y + 50 + random.randint(0, 5))
+            dx, dy = common_actions.adjust_position(460, 50)
+            util.moveTo(x + dx + random.randint(5, 15), y + dy + random.randint(0, 5))
             time.sleep(util.rand(1))
             pyautogui.click()
             x1, y1 = common_actions.match('enter_dungeon', 0.9, 3)
@@ -31,10 +33,14 @@ def chaos(common_actions, skills, dungeon_time, timeout):
             time.sleep(1 + util.rand(1))
             util.press('enter')
             x0, y0 = common_actions.match('leave_dungeon', 0.9, 30)
+            positions = [(x0 + (x1-x0)//3, y0), (x1, y0), (x0 + (x1-x0)//3, y1), (x1, y1)]
             util.press('space')
             dungeon_start = time.time()
             time.sleep(5)
-            cooldowns = {}
+            abilities = common_actions.abilities()
+            if abilities is None:
+                print('could not find abilities')
+                raise TimeoutError()
             while time.time() - dungeon_start < dungeon_time_adj:
                 pos = common_actions.match('base_resurrect', 0.8)
                 if pos is not None:
@@ -42,14 +48,21 @@ def chaos(common_actions, skills, dungeon_time, timeout):
                     pyautogui.click()
                     time.sleep(5)
                 common_actions.match('leave_dungeon', 0.9, 2, verbose=False)
-                for key, skill in random.sample(skills.items(), len(skills)):
-                    if key in cooldowns and time.time() - cooldowns[key] < skill['cooldown']:
+                if ultimate_mode == 'mayhem':
+                    common_actions.press('ability_ultimate')
+                current_abilities = common_actions.abilities()
+                if current_abilities is None:
+                    print('could not find abilities')
+                    continue
+                for i, ability in random.sample(list(enumerate(current_abilities)), len(current_abilities)):
+                    if np.mean(np.square(abilities[i] - ability)) >= 10:
                         continue
-                    util.moveTo(random.randint(x0 + (x1-x0)//3, x1), random.randint(y0, y1))
+                    x, y = random.choice(positions)
+                    util.moveTo(x + random.randint(-50, 50), y + random.randint(-50, 50))
                     pyautogui.rightClick()
+                    key = common_actions.keymap[f'ability_{i+1}']
                     pyautogui.keyDown(key)
-                    cooldowns[key] = time.time() + 0.5
-                    time.sleep(skill['duration'] + util.rand(0.1))
+                    time.sleep(skills[i] + util.rand(0.1))
                     pyautogui.keyUp(key)
             leave_dungeon(common_actions)
             common_actions.repair()

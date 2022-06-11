@@ -52,7 +52,7 @@ def match(template, confidence, timeout=None):
         match = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
         r, c = np.unravel_index(np.argmax(match), match.shape)
         if match[r, c] > confidence:
-            return c, r
+            return c, r, match[r, c]
         if timeout is None:
             return None
         if time.time() - start > timeout:

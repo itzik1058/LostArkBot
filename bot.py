@@ -14,6 +14,8 @@ def main():
     parser.set_defaults(task=None)
     parser.add_argument('--template-path', default='templates', type=str)
     parser.add_argument('--keymap-file', default='keymap.json', type=str)
+    parser.add_argument('--game-width', default=1600, type=int)
+    parser.add_argument('--game-height', default=900, type=int)
     parser.add_argument('--timeout', default=None, type=int)
     parser.add_argument('--startup-delay', default=5, type=int)
     subparsers = parser.add_subparsers()
@@ -23,6 +25,7 @@ def main():
     chaos_parser.set_defaults(task='chaos')
     chaos_parser.add_argument('--skills-file', default='skills.json', type=str)
     chaos_parser.add_argument('--skill-set', default='base', type=str)
+    chaos_parser.add_argument('--ultimate-mode', default='', type=str)
     chaos_parser.add_argument('--dungeon-time', default=65, type=int)
     args = parser.parse_args()
     if args.task is None:
@@ -38,7 +41,7 @@ def main():
     templates = {f.stem: cv2.cvtColor(cv2.imread(str(f.absolute())), cv2.COLOR_BGR2RGB) for f in pathlib.Path(args.template_path).glob('*.png')}
     with open(args.keymap_file, 'r') as f:
         keymap = json.load(f)
-    common_actions = common.CommonActions(templates, keymap)
+    common_actions = common.CommonActions(templates, keymap, args.game_width, args.game_height)
 
     try:
         if args.task == 'fish':
@@ -46,7 +49,7 @@ def main():
         elif args.task == 'chaos':
             with open(args.skills_file, 'r') as f:
                 skills = json.load(f)
-            chaos.chaos(common_actions, skills[args.skill_set], args.dungeon_time, args.timeout)
+            chaos.chaos(common_actions, skills[args.skill_set], args.ultimate_mode, args.dungeon_time, args.timeout)
         else:
             parser.print_help()
     except KeyboardInterrupt:
