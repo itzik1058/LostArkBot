@@ -22,17 +22,17 @@ def chaos(common_actions, skills, ultimate_mode, dungeon_time, timeout):
             x, y = common_actions.match('chaos_dungeon', 0.7, 3)
             time.sleep(util.rand(1))
             dx, dy = common_actions.adjust_position(460, 50)
-            util.moveTo(x + dx + random.randint(5, 15), y + dy + random.randint(0, 5))
+            util.moveTo(x + dx + random.randint(5, 50), y + dy + random.randint(5, 20))
             time.sleep(util.rand(1))
             pyautogui.click()
-            x1, y1 = common_actions.match('enter_dungeon', 0.9, 3)
+            x1, y1 = common_actions.match('enter_dungeon', 0.8, 3)
             time.sleep(util.rand(1))
-            util.moveTo(x1 + random.randint(5, 15), y1 + random.randint(5, 15))
+            util.moveTo(x1 + random.randint(5, 50), y1 + random.randint(5, 20))
             time.sleep(util.rand(1))
             pyautogui.click()
             time.sleep(1 + util.rand(1))
             util.press('enter')
-            x0, y0 = common_actions.match('leave_dungeon', 0.9, 30)
+            x0, y0 = common_actions.match('leave_dungeon', 0.8, 30)
             positions = [(x0 + (x1-x0)//3, y0), (x1, y0), (x0 + (x1-x0)//3, y1), (x1, y1)]
             util.press('space')
             dungeon_start = time.time()
@@ -47,7 +47,7 @@ def chaos(common_actions, skills, ultimate_mode, dungeon_time, timeout):
                     util.moveTo(pos[0] + random.randint(0, 15), pos[1] + random.randint(0, 10))
                     pyautogui.click()
                     time.sleep(5)
-                common_actions.match('leave_dungeon', 0.9, 2, verbose=False)
+                common_actions.match('leave_dungeon', 0.8, 2, verbose=False)
                 if ultimate_mode == 'mayhem':
                     common_actions.press('ability_ultimate')
                 current_abilities = common_actions.abilities()
@@ -66,7 +66,7 @@ def chaos(common_actions, skills, ultimate_mode, dungeon_time, timeout):
                     pyautogui.keyUp(key)
             leave_dungeon(common_actions)
             common_actions.repair()
-        except TimeoutError:
+        except:
             print('Chaos failed')
             recalibrate(common_actions)
         if timeout is not None and time.time() - start > timeout:
@@ -81,9 +81,9 @@ def recalibrate(common_actions):
 
 
 def leave_dungeon(common_actions):
-    pos = common_actions.match('leave_dungeon', 0.9)
+    pos = common_actions.match('leave_dungeon', 0.8)
     if pos is not None:
-        util.moveTo(pos[0] + random.randint(0, 15), pos[1] + random.randint(0, 10))
+        util.moveTo(pos[0] + random.randint(5, 15), pos[1] + random.randint(5, 10))
         pyautogui.click()
         time.sleep(1 + util.rand(1))
         util.press('enter')

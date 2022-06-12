@@ -34,7 +34,7 @@ class CommonActions:
         for _ in range(5):
             try:
                 util.press('Esc')
-                self.match('game_menu', 0.9, 1)
+                self.match('game_menu', 0.8, 1)
                 util.press('Esc')
                 time.sleep(1)
                 break
@@ -42,7 +42,7 @@ class CommonActions:
                 pass
 
     def repair(self):
-        stronghold = self.match('stronghold', 0.9) is not None
+        stronghold = self.match('stronghold', 0.8) is not None
         durability = self.match('durability', 0.6) is not None
         if durability and not stronghold:
             print('Entering stronghold')
@@ -56,11 +56,11 @@ class CommonActions:
                     print('Initiating durability repair')
                     util.press('g')
                     for button in ('repair_gear', 'tool_repair', 'repair_button'):
-                        x, y = self.match(button, 0.9, 5)
+                        x, y = self.match(button, 0.7, 5)
                         time.sleep(util.rand(1))
-                        util.moveTo(x + random.randint(5, 15), y + random.randint(5, 15))
+                        util.moveTo(x + random.randint(5, 50), y + random.randint(5, 20))
                         pyautogui.click()
-                    self.match('repair_confirm', 0.9, 5)
+                    self.match('repair_confirm', 0.7, 5)
                     time.sleep(util.rand(1))
                     util.press('Enter')
                     time.sleep(1 + util.rand(1))
@@ -76,7 +76,7 @@ class CommonActions:
     
     def wait_transition(self):
         try:
-            self.match('in_game', 0.9, 30)
+            self.match('in_game', 0.8, 30)
         except TimeoutError:
             time.sleep(30)
     
@@ -84,7 +84,7 @@ class CommonActions:
         screenshot = np.array(pyautogui.screenshot(), dtype='uint8')
         match = cv2.matchTemplate(screenshot, self.templates['in_game'], cv2.TM_CCOEFF_NORMED)
         r, c = np.unravel_index(np.argmax(match), match.shape)
-        if match[r, c] < 0.9:
+        if match[r, c] < 0.8:
             return None
         drt, dct = self.adjust_position(795+20, 795+55), self.adjust_position(525+45, 525+200)
         drb, dcb = self.adjust_position(795+55, 795+95), self.adjust_position(525+65, 525+220)
