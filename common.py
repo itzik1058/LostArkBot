@@ -17,9 +17,9 @@ class CommonActions:
     def adjust_position(self, x, y):
         return x * self.game_height // 900, y * self.game_width // 1600
 
-    def match(self, template, confidence, timeout=None, verbose=True):
+    def match(self, template, confidence, timeout=None, initial_screenshot=None, verbose=True):
         start = time.time()
-        result = util.match(self.templates[template], confidence, timeout)
+        result = util.wait_match(self.templates[template], confidence, timeout, initial_screenshot)
         if verbose and result is not None:
             x, y, c = result
             print(f'{template} with confidence {c:.1%} in {time.time() - start:.1f}s')
@@ -34,6 +34,7 @@ class CommonActions:
         for _ in range(5):
             try:
                 util.press('Esc')
+                time.sleep(1)
                 self.match('game_menu', 0.8, 1)
                 util.press('Esc')
                 time.sleep(1)
@@ -43,13 +44,14 @@ class CommonActions:
 
     def repair(self):
         stronghold = self.match('stronghold', 0.8) is not None
-        durability = self.match('durability', 0.6) is not None
+        durability = self.match('durability', 0.5) is not None
         if durability and not stronghold:
             print('Entering stronghold')
             self.press('song_stronghold')
             stronghold = True
             time.sleep(10)
             self.wait_transition()
+            time.sleep(10)
         if stronghold:
             try:
                 if durability:
@@ -80,8 +82,9 @@ class CommonActions:
         except TimeoutError:
             time.sleep(30)
     
-    def abilities(self):
-        screenshot = np.array(pyautogui.screenshot(), dtype='uint8')
+    def abilities(self, screenshot=None):
+        if screenshot is None:
+            screenshot = util.get_screen()
         match = cv2.matchTemplate(screenshot, self.templates['in_game'], cv2.TM_CCOEFF_NORMED)
         r, c = np.unravel_index(np.argmax(match), match.shape)
         if match[r, c] < 0.8:
